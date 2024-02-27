@@ -24,6 +24,17 @@ const productSchema=new mongoose.Schema({
         ref:'Category',
         required:true
     },
+    quantity:{
+        type:Number
+    },
+    photo:{
+        data:Buffer,
+        contentType:String
+    },
+    shipping:{
+        required:false,
+        type:boolean
+    }
 },
 {timestamps:true}
 );
