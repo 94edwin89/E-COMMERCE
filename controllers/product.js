@@ -5,7 +5,7 @@ const Product = require('../models/product');
 const { errorHandler } = require('../helpers/dbErrorHandler');
 
 exports.productById = (req, res, next) => {
-    const productId = req.params.productId; // Assuming productId is part of the request parameters
+    const productId = req.params.productId; // updated mongoose queries, as no longer accepted callback funtion
 
     Product.findById(productId)
         .then(product => {
