@@ -4,6 +4,32 @@ const fs = require('fs');
 const Product = require('../models/product');
 const { errorHandler } = require('../helpers/dbErrorHandler');
 
+exports.productById = (req, res, next) => {
+    const productId = req.params.productId; // Assuming productId is part of the request parameters
+
+    Product.findById(productId)
+        .then(product => {
+            if (!product) {
+                return res.status(400).json({
+                    error: 'Product not found'
+                });
+            }
+            req.product = product;
+            next();
+        })
+        .catch(err => {
+            console.error('Error fetching product by ID:', err);
+            return res.status(500).json({
+                error: 'Internal server error'
+            });
+        });
+};
+
+exports.read=(req,res)=>{
+    req.product.photo=undefined
+    return res.json(req.product);
+}
+
 exports.create = (req, res) => {
     const form = new formidable.IncomingForm();
     form.keepExtensions = true;
