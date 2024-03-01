@@ -30,6 +30,8 @@ exports.read=(req,res)=>{
     return res.json(req.product);
 }
 
+
+
 exports.create = (req, res) => {
     const form = new formidable.IncomingForm();
     form.keepExtensions = true;
@@ -93,3 +95,28 @@ exports.create = (req, res) => {
             });
         });
 };
+
+
+exports.remove = (req, res) => {
+    let product = req.product;
+
+    product.deleteOne()
+        .then(result => {
+            if (result.deletedCount === 0) {
+                return res.status(404).json({
+                    error: 'Product not found'
+                });
+            }
+            res.json({
+                deletedProduct: result,
+                message: 'Product deleted successfully'
+            });
+        })
+        .catch(err => {
+            console.error('Error deleting product:', err);
+            return res.status(400).json({
+                error: errorHandler(err)
+            });
+        });
+};
+
