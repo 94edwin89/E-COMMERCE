@@ -6,6 +6,7 @@ const cookieParser=require('cookie-parser')
 const  ExpressValidator=require('express-validator')
 
 require('dotenv').config()
+
 // import routes
 const authRoutes=require('./routes/auth')
 const userRoutes=require('./routes/user')
