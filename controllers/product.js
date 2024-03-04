@@ -186,3 +186,34 @@ exports.update = (req, res) => {
         });
 };
 
+
+/*
+sell/ arrival
+by sell=/products?sortBy=sold&order=descccccccccccccccccccc&limit=4
+by arrival=/products?sortBy=createdAt&order=descccccccccccccccccccc&limit=4
+
+if no params are sent , then all products are returned
+*/ 
+
+
+exports.list=(req,res)=>{
+    let order=req.query.order?req.query.order:"asc"
+    let sortBy=req.query.sortBy?req.query.sortBy:'_id'
+    let limit=req.query.limit?req.query.limit:6
+
+    product.find()
+    .select('-photo')
+    .populate('category')
+    .sort([[sortBy,order]])
+    .limit(limit)
+    .exec((err,products)=>{
+        if (err){
+            return res.json(400).json({
+                error:'Products not found'
+            })
+        }
+
+        res.send(products)
+
+    })
+}
