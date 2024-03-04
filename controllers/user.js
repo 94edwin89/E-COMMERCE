@@ -18,3 +18,39 @@ exports.userById = (req, res, next, id) => {
             });
         });
 };
+
+
+exports.read= (req,res)=>{
+    req.profile.hashed_password=undefined
+    req.profile.salt= undefined
+
+    return res.json(req.profile)
+}
+
+exports.update = async (req, res) => {
+    try {
+        const user = await User.findOneAndUpdate(
+            { _id: req.profile._id },
+            { $set: req.body },
+            { new: true }
+        );
+
+        if (!user) {
+            return res.status(400).json({
+                error: 'You are not authorized to perform this action'
+            });
+        }
+
+       if (user.profile) {
+            user.profile.hashed_password = undefined;
+            user.profile.salt = undefined;
+        }
+
+        res.json(user);
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({
+            error: 'Internal server error'
+        });
+    }
+};
