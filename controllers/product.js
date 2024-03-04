@@ -207,7 +207,7 @@ exports.list=(req,res)=>{
     .sort([[sortBy,order]])
     .limit(limit)
     .then(products => {
-        res.send(products);
+        res.json(products);
     })
     .catch(err => {
         return res.status(400).json({
@@ -215,3 +215,74 @@ exports.list=(req,res)=>{
         });
     });
 }
+
+
+
+/*
+it will find the products based on the req product category
+other products tha has the same category, will be returned
+*/
+
+
+exports.listRelated=(req,res)=>{
+
+    let limit= req.query.limit ? parseInt(req.query.limit):6;
+
+    Product.find({_id: {$ne:req.product}, category: req.product.category})
+    .limit(limit)
+    .populate('category','_id name')
+    .then(products =>{
+        res.json(products)
+    })
+    .catch(err=>{
+        return res.status(400).json({
+            error:"Products not found"
+        })
+    })
+}
+
+// exports.listCategories = async (req, res) => {
+    // try {
+    //     const result = await Product.aggregate([
+    //         {
+    //             $sortByCount: "$category"
+    //         },
+    //         {
+    //             $project: {
+    //                 _id: 0,
+    //                 category: "$_id"
+    //             }
+    //         }
+    //     ]).exec();
+
+    //     const categories = result.map(item => item.category);
+    //     console.log("Categories fetched successfully:", categories);
+    //     res.json(categories);
+    // } catch (err) {
+    //     console.error("Error fetching categories:", err);
+    //     return res.status(500).json({
+    //         error: "Internal server error",
+    //         message: err.message
+    //     });
+    // }
+// };
+
+exports.listCategories = (req, res) => {
+    Product.distinct('category', {})
+        .then(categories => {
+            if (categories.length === 0) {
+                return res.status(404).json({
+                    error: "Categories not found"
+                });
+            }
+            res.json(categories);
+        })
+        .catch(err => {
+            console.error("Error fetching categories:", err);
+            res.status(500).json({
+                error: "Internal server error",
+                message: err.message
+            });
+        });
+};
+
