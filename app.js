@@ -3,6 +3,7 @@ const mongoose=require('mongoose')
 const morgan=require('morgan')
 const bodyParser=require('body-parser')
 const cookieParser=require('cookie-parser')
+const cors= require('cors');
 const  ExpressValidator=require('express-validator')
 
 require('dotenv').config()
@@ -30,6 +31,7 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended:true}))
 app.use(cookieParser())
 app.use(ExpressValidator())
+app.use(cors());
 
 
 // routes mddleware
