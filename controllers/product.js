@@ -8,6 +8,7 @@ exports.productById = (req, res, next) => {
   const productId = req.params.productId; // updated mongoose queries, as no longer accepted callback funtion
 
   Product.findById(productId)
+  .populate('category')
     .then((product) => {
       if (!product) {
         return res.status(400).json({
