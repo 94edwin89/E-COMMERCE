@@ -1,18 +1,25 @@
 const { Order, CartItem } = require("../models/order");
 const { errorHandler } = require("../helpers/dbErrorHandler");
 
-exports.orderById = (req, res, next, id) => {
-    Order.findById(id)
-        .populate("products.product", "name price")
-        .exec((err, order) => {
-            if (err || !order) {
-                return res.status(400).json({
-                    error: errorHandler(err)
-                });
-            }
-            req.order = order;
-            next();
+exports.orderById = async (req, res, next, id) => {
+    try {
+        const order = await Order.findById(id)
+            .populate("products.product", "name price")
+            .exec();
+
+        if (!order) {
+            return res.status(400).json({
+                error: "Order not found"
+            });
+        }
+
+        req.order = order;
+        next();
+    } catch (err) {
+        return res.status(500).json({
+            error: "Internal server error"
         });
+    }
 };
 
 exports.create = (req, res) => {
@@ -33,13 +40,14 @@ exports.listOrders = (req, res) => {
     Order.find()
         .populate("user", "_id name address")
         .sort("-created")
-        .exec((err, orders) => {
-            if (err) {
-                return res.status(400).json({
-                    error: errorHandler(error)
-                });
-            }
+        .exec()
+        .then(orders => {
             res.json(orders);
+        })
+        .catch(err => {
+            return res.status(400).json({
+                error: errorHandler(err)
+            });
         });
 };
 
