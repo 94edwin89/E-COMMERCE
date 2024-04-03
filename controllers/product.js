@@ -126,11 +126,13 @@ exports.remove = (req, res) => {
 };
 
 exports.update = (req, res) => {
-  const form = new formidable.IncomingForm();
+  
+  let form = new formidable.IncomingForm();
   form.keepExtensions = true;
 
   // Wrap the form parsing in a promise
   const parseForm = () => {
+
     return new Promise((resolve, reject) => {
       form.parse(req, (err, fields, files) => {
         if (err) {
@@ -149,20 +151,20 @@ exports.update = (req, res) => {
       product = _.extend(product, fields);
 
       // check for all fields
-      const { name, description, price, category, quantity, shipping } = fields;
+      // const { name, description, price, category, quantity, shipping } = fields;
 
-      if (
-        !name ||
-        !description ||
-        !price ||
-        !category ||
-        !quantity ||
-        !shipping
-      ) {
-        return res.status(400).json({
-          error: "All files are required",
-        });
-      }
+      // if (
+      //   !name ||
+      //   !description ||
+      //   !price ||
+      //   !category ||
+      //   !quantity ||
+      //   !shipping
+      // ) {
+      //   return res.status(400).json({
+      //     error: "All files are required",
+      //   });
+      // }
 
       // 1kb =1000
       // 1mb = 1000000
