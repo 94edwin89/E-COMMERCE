@@ -52,12 +52,7 @@ etc. (list any other major technologies or libraries used)
 Getting Started
 To get started with this project, follow these steps:
 
-Clone the repository:
 
-bash
-Copy code
-git clone https://github.com/yourusername/yourproject.git
-Install dependencies:
 
 bash
 Copy code
